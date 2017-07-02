@@ -1,9 +1,9 @@
 package daedalus.network.node;
 
-abstract class Packet {
+abstract class Request {
 	private NetworkNode sender;
 	
-	Packet(NetworkNode sender) {
+	Request(NetworkNode sender) {
 		this.sender = sender;
 	}
 
@@ -14,4 +14,6 @@ abstract class Packet {
 	public void setSender(NetworkNode sender) {
 		this.sender = sender;
 	}
+	
+	public abstract String getPacketId();
 }
