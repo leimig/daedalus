@@ -1,5 +1,7 @@
 package daedalus.network.node;
 
+import daedalus.network.protocol.Packet;
+
 abstract class Request {
 	private NetworkNode sender;
 	
@@ -11,9 +13,5 @@ abstract class Request {
 		return sender;
 	}
 
-	public void setSender(NetworkNode sender) {
-		this.sender = sender;
-	}
-	
-	public abstract String getPacketId();
+	public abstract Packet getPacket();
 }

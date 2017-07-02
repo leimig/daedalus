@@ -1,6 +1,7 @@
 package daedalus.network.node;
 
 import daedalus.network.protocol.InterestPacket;
+import daedalus.network.protocol.Packet;
 
 class LookupRequest extends Request {
 	private InterestPacket packet; 
@@ -10,16 +11,8 @@ class LookupRequest extends Request {
 		this.packet = packet;
 	}
 
-	public InterestPacket getPacket() {
-		return packet;
-	}
-
-	public void setPacket(InterestPacket packet) {
-		this.packet = packet;
-	}
-	
 	@Override
-	public String getPacketId() {
-		return this.packet.getDataName();
+	public Packet getPacket() {
+		return this.packet;
 	}
 }

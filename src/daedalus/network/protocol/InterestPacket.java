@@ -1,13 +1,13 @@
 package daedalus.network.protocol;
 
-public class InterestPacket {
+public class InterestPacket implements Packet {
 	private String dataName;
 	
 	public InterestPacket(String dataName) {
 		this.dataName = dataName;
 	}
 	
-	public String getDataName() {
+	public String getIdentifier() {
 		return this.dataName;
 	}
 }

@@ -1,6 +1,7 @@
 package daedalus.network.node;
 
 import daedalus.network.protocol.DataPacket;
+import daedalus.network.protocol.Packet;
 
 class ResponseRequest extends Request {
 	private DataPacket packet; 
@@ -10,16 +11,8 @@ class ResponseRequest extends Request {
 		this.packet = packet;
 	}
 
-	public DataPacket getPacket() {
-		return packet;
-	}
-
-	public void setPacket(DataPacket packet) {
-		this.packet = packet;
-	}
-	
 	@Override
-	public String getPacketId() {
-		return this.packet.getName();
+	public Packet getPacket() {
+		return this.packet;
 	}
 }
