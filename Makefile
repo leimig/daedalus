@@ -19,12 +19,19 @@ LIBS = -lsnap
 # the build target executable:
 TARGET = daedalus
 
+# src folders
+SRC = ./src/*.cpp \
+	./src/network/node/*.cpp \
+
+	# ./src/network/*.cpp \
+	# ./src/network/protocol/*.cpp
+
 default: all
 
 all: clean $(TARGET) run
 
-$(TARGET): $(TARGET).cpp
-	$(CC) $(CFLAGS) -o ./bin/$(TARGET) ./src/$(TARGET).cpp $(LFLAGS) $(LIBS)
+$(TARGET): ./src/$(TARGET).cpp
+	$(CC) -std=c++11 $(CFLAGS) -o ./bin/$(TARGET) $(SRC) $(LFLAGS) $(LIBS)
 
 run:
 	./bin/$(TARGET)

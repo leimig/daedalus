@@ -37,3 +37,4 @@
 # binaries
 bin/*
 !bin/.gitkeep
+/bin/
