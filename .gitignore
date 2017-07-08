@@ -35,4 +35,5 @@
 *.dSYM/
 
 # binaries
-bin/
+bin/*
+!bin/.gitkeep

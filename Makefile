@@ -24,7 +24,7 @@ default: all
 all: clean $(TARGET) run
 
 $(TARGET): $(TARGET).cpp
-	$(CC) $(CFLAGS) -o ./bin/$(TARGET) $(TARGET).cpp $(LFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) -o ./bin/$(TARGET) ./src/$(TARGET).cpp $(LFLAGS) $(LIBS)
 
 run:
 	./bin/$(TARGET)
