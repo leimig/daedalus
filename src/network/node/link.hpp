@@ -17,7 +17,7 @@ namespace network {
             link(network_node* forwarding_node, int delay, int variation);
             ~link();
 
-            network_node* const& forwarding_node() { return this->m_forwarding_node; }
+            network_node* const& forwarding_node() const { return this->m_forwarding_node; }
             int delay();
         };
     }
