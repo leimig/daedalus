@@ -1,5 +1,6 @@
 #include <thread>
 
+#include "./../../../lib/easylogging++.h"
 #include "./network_node.hpp"
 
 network::node::network_node::network_node() {
@@ -27,13 +28,20 @@ network::node::network_node::~network_node() {
 }
 
 void network::node::network_node::run() {
-    while (this->m_lookup_requests.empty() && this->m_response_requests.empty()) {
+    // Need to find another way to finish node's thread
+    while (!this->m_lookup_requests.empty() && !this->m_response_requests.empty()) {
+        LOG(INFO) << "[NETWORK_NODE] " << "Verifying for incoming packets";
+
+        LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Interest Packets";
         if (!this->m_lookup_requests.empty()) {
             network::protocol::interest_packet packet = this->m_lookup_requests.front();
 
             if (false) { // check content store
+                LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet found in Content Store, answering Interest Packet";
                 // answer with the packet, if cached
             } else {
+                LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet not found in Content Store, sending new Interest Packet";
+
                 if (this->m_pending_interest_table.count(packet.id()) == 0) {
                     std::list<network_node*> l;
                     l.push_back(packet.sender());
@@ -55,6 +63,10 @@ void network::node::network_node::run() {
             this->m_lookup_requests.pop_front();
         }
 
+        LOG(DEBUG) << "[NETWORK_NODE]" << "Yielding thread";
+        std::this_thread::yield();
+
+        LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Data Packets";
         if (!this->m_response_requests.empty()) {
             network::protocol::data_packet packet = this->m_response_requests.front();
 
@@ -72,18 +84,24 @@ void network::node::network_node::run() {
             this->m_response_requests.pop_front();
         }
 
+        LOG(DEBUG) << "[NETWORK_NODE]" << "Yielding thread";
         std::this_thread::yield();
     }
+
+    LOG(INFO) << "[NETWORK_NODE] " << "Finishing execution";
 }
 
 void network::node::network_node::register_forwarding_node(network_node* forwarding_node) {
+    LOG(INFO) << "[NETWORK_NODE] " << "Registering new Forwarding node"; // current and forwarding ids?
     this->m_forwarding_nodes.push_back(new link(forwarding_node));
 }
 
 void network::node::network_node::lookup(network::protocol::interest_packet packet) {
+    LOG(INFO) << "[NETWORK_NODE] " << "Receiving Interest Packet for " << packet.id();
     this->m_lookup_requests.push_back(packet);
 }
 
 void network::node::network_node::receive(network::protocol::data_packet packet) {
+    LOG(INFO) << "[NETWORK_NODE] " << "Receiving Data Packet for " << packet.id();
     this->m_response_requests.push_back(packet);
 }

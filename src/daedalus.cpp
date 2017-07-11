@@ -8,10 +8,10 @@ INITIALIZE_EASYLOGGINGPP
 int main(int argc, char const *argv[]) {
     START_EASYLOGGINGPP(argc, argv);
 
-    LOG(INFO) << "Setting up network simulator";
+    LOG(INFO) << "[PROGRAM] " << "Setting up network simulator";
     network::network_simulator simulator(1);
 
-    LOG(INFO) << "Starting simulation";
+    LOG(INFO) << "[PROGRAM] " << "Starting simulation";
     simulator.start();
 
     return 0;
