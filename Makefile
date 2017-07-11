@@ -20,7 +20,8 @@ LIBS = -lsnap
 TARGET = daedalus
 
 # src folders
-SRC = ./src/*.cpp \
+SRC = ./lib/*.cc \
+	./src/*.cpp \
 	./src/network/*.cpp \
 	./src/network/node/*.cpp \
 

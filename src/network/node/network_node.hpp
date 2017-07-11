@@ -23,10 +23,9 @@ namespace network {
             network_node();
             ~network_node();
 
-            void start();
             void run();
 
-            void registerForwardingNode(network_node* forwarding_node);
+            void register_forwarding_node(network_node* forwarding_node);
             void lookup(network::protocol::interest_packet packet);
             void receive(network::protocol::data_packet packet);
         };

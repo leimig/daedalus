@@ -27,7 +27,7 @@ network::node::network_node::~network_node() {
 }
 
 void network::node::network_node::run() {
-    while (true) {
+    while (this->m_lookup_requests.empty() && this->m_response_requests.empty()) {
         if (!this->m_lookup_requests.empty()) {
             network::protocol::interest_packet packet = this->m_lookup_requests.front();
 
@@ -59,13 +59,14 @@ void network::node::network_node::run() {
             network::protocol::data_packet packet = this->m_response_requests.front();
 
             if (this->m_pending_interest_table.count(packet.id()) == 1) {
-                std::list<network_node*> pending = this->m_pending_interest_table[packet.id];
+                std::list<network_node*> pending = this->m_pending_interest_table[packet.id()];
 
                 std::list<network_node*>::iterator node_i;
 
                 for (node_i = pending.begin(); node_i != pending.end(); ++node_i) {
                     // link has to be bilateral
                     // (*node_i)->forwarding_node()->lookup(i_p);
+                }
             }
 
             this->m_response_requests.pop_front();
@@ -75,7 +76,7 @@ void network::node::network_node::run() {
     }
 }
 
-void network::node::network_node::registerForwardingNode(network_node* forwarding_node) {
+void network::node::network_node::register_forwarding_node(network_node* forwarding_node) {
     this->m_forwarding_nodes.push_back(new link(forwarding_node));
 }
 
