@@ -2,7 +2,6 @@
 #define INTEREST_PACKET_HPP
 
 #include <string>
-
 #include "./packet.hpp"
 
 namespace network {

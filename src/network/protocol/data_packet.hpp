@@ -2,11 +2,16 @@
 #define DATA_PACKET_HPP
 
 #include <string>
-
 #include "./packet.hpp"
 
 namespace network {
+    namespace node {
+        class network_node;
+    }
+
     namespace protocol {
+        class packet;
+
         class data_packet : public packet {
         private:
             std::string m_id;

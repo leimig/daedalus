@@ -32,7 +32,7 @@ default: all
 all: clean $(TARGET) run
 
 $(TARGET): ./src/$(TARGET).cpp
-	$(CC) -std=c++11 $(CFLAGS) -o ./bin/$(TARGET) $(SRC) $(LFLAGS) $(LIBS)
+	$(CC) -std=c++11 $(CFLAGS) -o ./bin/$(TARGET) $(SRC) $(LFLAGS) $(LIBS) -O0
 
 run:
 	./bin/$(TARGET)
