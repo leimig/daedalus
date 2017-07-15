@@ -20,7 +20,7 @@ namespace network {
             ~content_store();
 
             bool has(std::string id);
-            protocol::data_packet get(std::string id);
+            protocol::data_packet* get(std::string id);
             void put(protocol::data_packet packet);
         };
     }

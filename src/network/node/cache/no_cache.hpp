@@ -8,14 +8,14 @@
 namespace network {
     namespace node {
         namespace cache {
-            class node_cache : public policy {
+            class no_cache : public policy {
 
             public:
-                node_cache() {}
-                ~node_cache() {}
+                no_cache() {}
+                ~no_cache() {}
 
                 bool has(std::string id) { return false; }
-                network::node::protocol::data_packet get(std::string id) { return NULL };
+                network::node::protocol::data_packet* get(std::string id) { return NULL; };
                 void put(network::node::protocol::data_packet packet) {};
             };
         }

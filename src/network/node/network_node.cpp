@@ -1,14 +1,15 @@
 #include <thread>
 
 #include "./../../../lib/easylogging++.h"
-#include "./content_store.hpp"
 #include "./link.hpp"
 #include "./network_node.hpp"
 #include "./protocol/data_packet.hpp"
 #include "./protocol/interest_packet.hpp"
+#include "./content_store.hpp"
+#include "./cache/no_cache.hpp"
 
 network::node::network_node::network_node() {
-
+    this->store = new content_store(new cache::no_cache());
 }
 
 network::node::network_node::~network_node() {
@@ -17,6 +18,8 @@ network::node::network_node::~network_node() {
 
     for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i)
         delete *link_i;
+
+    delete this->store;
 }
 
 void network::node::network_node::run() {
@@ -46,8 +49,8 @@ void network::node::network_node::handle_lookup_request() {
 
         if (this->store->has(packet.id())) {
             LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet found in Content Store, answering Interest Packet";
-
-            packet.sender()->receive(this->store->get(packet.id()));
+            network::node::protocol::data_packet* data_packet = this->store->get(packet.id());
+            packet.sender()->receive(*data_packet);
 
         } else {
             LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet not found in Content Store, sending new Interest Packet";

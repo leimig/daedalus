@@ -14,7 +14,7 @@ bool network::node::content_store::has(std::string id) {
     return this->policy->has(id);
 }
 
-network::node::protocol::data_packet network::node::content_store::get(std::string id) {
+network::node::protocol::data_packet* network::node::content_store::get(std::string id) {
     return this->policy->get(id);
 }
 
