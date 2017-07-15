@@ -13,7 +13,7 @@ namespace network {
 
         class content_store {
         private:
-            network::node::cache::policy* policy;
+            network::node::cache::policy* m_policy;
 
         public:
             content_store(network::node::cache::policy* policy);

@@ -28,7 +28,7 @@ namespace network {
             std::list<protocol::interest_packet> m_lookup_requests;
             std::list<protocol::data_packet> m_response_requests;
 
-            network::node::content_store* store;
+            network::node::content_store* m_store;
             std::list<link*> m_forwarding_nodes;
             std::map<std::string, std::list<pit_entry>> m_pending_interest_table;
 

@@ -24,8 +24,8 @@ SRC = ./lib/*.cc \
 	./src/*.cpp \
 	./src/network/*.cpp \
 	./src/network/node/*.cpp \
-
-	# ./src/network/protocol/*.cpp
+	./src/network/node/cache/*.cpp \
+	./src/network/topology/*.cpp \
 
 default: all
 

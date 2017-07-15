@@ -3,11 +3,8 @@
 #include "./../../lib/easylogging++.h"
 #include "network_simulator.hpp"
 
-network::network_simulator::network_simulator(int n_nodes) {
-    LOG(INFO) << "[NETWORK_SIMULATOR] " << "Instantiating nodes";
-    for (int i = 0; i < n_nodes; i++) {
-        this->m_nodes.push_back(new node::network_node);
-    }
+network::network_simulator::network_simulator(std::list<node::network_node*> nodes) {
+    this->m_nodes = nodes;
 }
 
 network::network_simulator::~network_simulator() {

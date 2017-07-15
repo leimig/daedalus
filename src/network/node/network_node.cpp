@@ -9,7 +9,7 @@
 #include "./cache/no_cache.hpp"
 
 network::node::network_node::network_node() {
-    this->store = new content_store(new cache::no_cache());
+    this->m_store = new content_store(new cache::no_cache());
 }
 
 network::node::network_node::~network_node() {
@@ -19,7 +19,7 @@ network::node::network_node::~network_node() {
     for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i)
         delete *link_i;
 
-    delete this->store;
+    delete this->m_store;
 }
 
 void network::node::network_node::run() {
@@ -47,9 +47,9 @@ void network::node::network_node::handle_lookup_request() {
     if (!this->m_lookup_requests.empty()) {
         network::node::protocol::interest_packet packet = this->m_lookup_requests.front();
 
-        if (this->store->has(packet.id())) {
+        if (this->m_store->has(packet.id())) {
             LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet found in Content Store, answering Interest Packet";
-            network::node::protocol::data_packet* data_packet = this->store->get(packet.id());
+            network::node::protocol::data_packet* data_packet = this->m_store->get(packet.id());
             packet.sender()->receive(*data_packet);
 
         } else {
@@ -105,6 +105,7 @@ void network::node::network_node::handle_response_request() {
             }
         }
 
+        this->m_store->put(packet);
         this->m_response_requests.pop_front();
     }
 }
