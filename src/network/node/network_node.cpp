@@ -4,8 +4,8 @@
 #include "./content_store.hpp"
 #include "./link.hpp"
 #include "./network_node.hpp"
-#include "./../protocol/data_packet.hpp"
-#include "./../protocol/interest_packet.hpp"
+#include "./protocol/data_packet.hpp"
+#include "./protocol/interest_packet.hpp"
 
 network::node::network_node::network_node() {
 
@@ -42,7 +42,7 @@ void network::node::network_node::handle_lookup_request() {
     LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Interest Packets";
 
     if (!this->m_lookup_requests.empty()) {
-        network::protocol::interest_packet packet = this->m_lookup_requests.front();
+        network::node::protocol::interest_packet packet = this->m_lookup_requests.front();
 
         if (this->store->has(packet.id())) {
             LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet found in Content Store, answering Interest Packet";
@@ -77,7 +77,7 @@ void network::node::network_node::handle_lookup_request() {
             std::list<link*>::iterator link_i;
 
             for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i) {
-                network::protocol::interest_packet i_p(this, packet.id());
+                network::node::protocol::interest_packet i_p(this, packet.id());
                 (*link_i)->forwarding_node()->lookup(i_p);
             }
         }
@@ -90,7 +90,7 @@ void network::node::network_node::handle_response_request() {
     LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Data Packets";
 
     if (!this->m_response_requests.empty()) {
-        network::protocol::data_packet packet = this->m_response_requests.front();
+        network::node::protocol::data_packet packet = this->m_response_requests.front();
 
         if (this->m_pending_interest_table.count(packet.id()) == 1) {
             std::list<pit_entry> pending = this->m_pending_interest_table[packet.id()];
@@ -111,12 +111,12 @@ void network::node::network_node::register_forwarding_node(network_node* forward
     this->m_forwarding_nodes.push_back(new link(forwarding_node));
 }
 
-void network::node::network_node::lookup(network::protocol::interest_packet packet) {
+void network::node::network_node::lookup(network::node::protocol::interest_packet packet) {
     LOG(INFO) << "[NETWORK_NODE] " << "Receiving Interest Packet for " << packet.id();
     this->m_lookup_requests.push_back(packet);
 }
 
-void network::node::network_node::receive(network::protocol::data_packet packet) {
+void network::node::network_node::receive(network::node::protocol::data_packet packet) {
     LOG(INFO) << "[NETWORK_NODE] " << "Receiving Data Packet for " << packet.id();
     this->m_response_requests.push_back(packet);
 }

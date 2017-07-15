@@ -7,16 +7,16 @@
 #include <string>
 
 namespace network {
-    namespace protocol {
-        class packet;
-        class data_packet;
-        class interest_packet;
-    }
-
     namespace node {
         class link;
         class content_store;
         class network_node;
+
+        namespace protocol {
+            class packet;
+            class data_packet;
+            class interest_packet;
+        }
 
         typedef struct pit_entry {
             std::chrono::milliseconds timestamp;
@@ -25,8 +25,8 @@ namespace network {
 
         class network_node {
         private:
-            std::list<network::protocol::interest_packet> m_lookup_requests;
-            std::list<network::protocol::data_packet> m_response_requests;
+            std::list<protocol::interest_packet> m_lookup_requests;
+            std::list<protocol::data_packet> m_response_requests;
 
             network::node::content_store* store;
             std::list<link*> m_forwarding_nodes;
@@ -41,8 +41,8 @@ namespace network {
             void handle_response_request();
 
             void register_forwarding_node(network_node* forwarding_node);
-            void lookup(network::protocol::interest_packet packet);
-            void receive(network::protocol::data_packet packet);
+            void lookup(protocol::interest_packet packet);
+            void receive(protocol::data_packet packet);
         };
     }
 }

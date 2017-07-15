@@ -6,11 +6,11 @@
 #include "./cache/policy.hpp"
 
 namespace network {
-    namespace protocol {
-        class data_packet;
-    }
-
     namespace node {
+        namespace protocol {
+            class data_packet;
+        }
+
         class content_store {
         private:
             network::node::cache::policy* policy;
@@ -20,8 +20,8 @@ namespace network {
             ~content_store();
 
             bool has(std::string id);
-            network::protocol::data_packet get(std::string id);
-            void put(network::protocol::data_packet packet);
+            protocol::data_packet get(std::string id);
+            void put(protocol::data_packet packet);
         };
     }
 }
