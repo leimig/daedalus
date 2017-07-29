@@ -8,18 +8,22 @@
 #include "./content_store.hpp"
 #include "./cache/no_cache.hpp"
 
-network::node::network_node::network_node() {
-    this->m_store = new content_store(new cache::no_cache());
+network::node::network_node::network_node(int id, network::node::cache::policy* policy) {
+    this->m_id = id;
+    this->m_store = new content_store(policy);
 }
 
 network::node::network_node::~network_node() {
     // delete m_forwarding_nodes
-    std::list<link*>::iterator link_i;
-
-    for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i)
+    for (auto link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i) {
         delete *link_i;
+    }
 
     delete this->m_store;
+}
+
+int network::node::network_node::id() {
+    return this->m_id;
 }
 
 void network::node::network_node::run() {
@@ -67,6 +71,15 @@ void network::node::network_node::handle_lookup_request() {
 
                 this->m_pending_interest_table[packet.id()] = l;
 
+                std::list<link*>::iterator link_i;
+
+                for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i) {
+                    network::node::protocol::interest_packet i_p(this, packet.id());
+                    if ((*link_i)->forwarding_node()->id() != packet.sender()->id()) {
+                        (*link_i)->forwarding_node()->lookup(i_p);
+                    }
+                }
+
             } else {
                 pit_entry entry;
                 entry.node = packet.sender();
@@ -75,13 +88,6 @@ void network::node::network_node::handle_lookup_request() {
                 );
 
                 this->m_pending_interest_table[packet.id()].push_back(entry);
-            }
-
-            std::list<link*>::iterator link_i;
-
-            for (link_i = this->m_forwarding_nodes.begin(); link_i != this->m_forwarding_nodes.end(); ++link_i) {
-                network::node::protocol::interest_packet i_p(this, packet.id());
-                (*link_i)->forwarding_node()->lookup(i_p);
             }
         }
 
@@ -111,7 +117,7 @@ void network::node::network_node::handle_response_request() {
 }
 
 void network::node::network_node::register_forwarding_node(network_node* forwarding_node) {
-    LOG(INFO) << "[NETWORK_NODE] " << "Registering new Forwarding node"; // current and forwarding ids?
+    LOG(DEBUG) << "[NETWORK_NODE] " << "Registering new Forwarding node"; // current and forwarding ids?
     this->m_forwarding_nodes.push_back(new link(forwarding_node));
 }
 

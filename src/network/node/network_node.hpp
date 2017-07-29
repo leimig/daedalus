@@ -8,15 +8,19 @@
 
 namespace network {
     namespace node {
-        class link;
-        class content_store;
-        class network_node;
-
         namespace protocol {
             class packet;
             class data_packet;
             class interest_packet;
         }
+
+        namespace cache {
+            class policy;
+        }
+
+        class link;
+        class content_store;
+        class network_node;
 
         typedef struct pit_entry {
             std::chrono::milliseconds timestamp;
@@ -25,6 +29,8 @@ namespace network {
 
         class network_node {
         private:
+            int m_id;
+
             std::list<protocol::interest_packet> m_lookup_requests;
             std::list<protocol::data_packet> m_response_requests;
 
@@ -33,8 +39,10 @@ namespace network {
             std::map<std::string, std::list<pit_entry>> m_pending_interest_table;
 
         public:
-            network_node();
+            network_node(int id, network::node::cache::policy* policy);
             ~network_node();
+
+            int id();
 
             void run();
             void handle_lookup_request();

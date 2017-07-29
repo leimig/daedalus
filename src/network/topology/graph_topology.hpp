@@ -14,7 +14,7 @@ namespace network {
             graph_topology();
             ~graph_topology();
 
-            std::list<network::node::network_node*> generate(topology_config config);
+            std::list<network::node::network_node*> generate(network::topology::topology_config* config);
         };
     }
 }

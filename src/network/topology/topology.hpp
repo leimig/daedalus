@@ -11,7 +11,6 @@ namespace network {
     namespace topology {
         typedef struct topology_config {
             int number_of_nodes = 50;
-            int max_number_of_edges_in_node = 3;
             int max_number_of_nodes_in_clusters = 5;
         } topology_config;
 
@@ -20,7 +19,7 @@ namespace network {
             topology() {};
             virtual ~topology() {};
 
-            virtual std::list<network::node::network_node*> generate(topology_config config) = 0;
+            virtual std::list<network::node::network_node*> generate(topology_config* config) = 0;
         };
     }
 }

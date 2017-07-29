@@ -43,17 +43,13 @@ int main(int argc, char const *argv[]) {
         topology_config.number_of_nodes = stoi(parser.get_cmd_option("-n"));
     }
 
-    if (parser.cmd_option_exists("-e")) {
-        topology_config.max_number_of_edges_in_node = stoi(parser.get_cmd_option("-e"));
-    }
-
     if (parser.cmd_option_exists("-cs")) {
         topology_config.max_number_of_nodes_in_clusters = stoi(parser.get_cmd_option("-cs"));
     }
 
     print_configuration(&topology_config);
 
-    std::list<network::node::network_node*> nodes = topology->generate(topology_config);
+    std::list<network::node::network_node*> nodes = topology->generate(&topology_config);
     delete topology;
 
     /**************************************************************
@@ -74,10 +70,6 @@ void print_configuration(network::topology::topology_config* topology_config) {
         << topology_config->number_of_nodes;
 
     LOG(INFO) << "[PROGRAM][CONFIG] "
-        << "Maximum number of edges for a single node: "
-        << topology_config->max_number_of_edges_in_node;
-
-    LOG(INFO) << "[PROGRAM][CONFIG] "
         << "Maximum number of nodes in cluster: "
         << topology_config->max_number_of_nodes_in_clusters;
 }
@@ -89,8 +81,7 @@ void print_help() {
     std::cout << std::endl;
     std::cout << "OPTIONS:" << std::endl;
     std::cout << std::endl;
-    std::cout << "-t <arg>"   << "\t" << "Topology type. Supported values are: GRAPH"               << std::endl;
-    std::cout << "-n <arg>"   << "\t" << "Number of nodes. Default: 50"                             << std::endl;
-    std::cout << "-e <arg>"   << "\t" << "Maximum number of edges for a single node. Default: 3"    << std::endl;
-    std::cout << "-cs <arg>"  << "\t" << "Maximum number of nodes in a cluster. Default: 5"         << std::endl;
+    std::cout << "-t <arg>"   << "\t" << "Topology type. Supported values are: GRAPH"                             << std::endl;
+    std::cout << "-n <arg>"   << "\t" << "Number of nodes. Default: 50"                                           << std::endl;
+    std::cout << "-cs <arg>"  << "\t" << "Maximum number of nodes in a cluster. Default: 5"                       << std::endl;
 }
