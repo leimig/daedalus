@@ -49,14 +49,14 @@ int main(int argc, char const *argv[]) {
 
     print_configuration(&topology_config);
 
-    std::list<network::node::network_node*> nodes = topology->generate(&topology_config);
+    network::node::network_node** nodes = topology->generate(&topology_config);
     delete topology;
 
     /**************************************************************
     **************         START SIMULATION          **************
     **************************************************************/
     LOG(INFO) << "[PROGRAM] " << "Setting up network simulator";
-    network::network_simulator simulator(nodes);
+    // network::network_simulator simulator(nodes);
 
     // LOG(INFO) << "[PROGRAM] " << "Starting simulation";
     // simulator.start();

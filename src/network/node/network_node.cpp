@@ -33,12 +33,10 @@ void network::node::network_node::run() {
 
         this->handle_lookup_request();
 
-        LOG(DEBUG) << "[NETWORK_NODE]" << "Yielding thread";
         std::this_thread::yield();
 
         this->handle_response_request();
 
-        LOG(DEBUG) << "[NETWORK_NODE]" << "Yielding thread";
         std::this_thread::yield();
     }
 
@@ -46,18 +44,14 @@ void network::node::network_node::run() {
 }
 
 void network::node::network_node::handle_lookup_request() {
-    LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Interest Packets";
-
     if (!this->m_lookup_requests.empty()) {
         network::node::protocol::interest_packet packet = this->m_lookup_requests.front();
 
         if (this->m_store->has(packet.id())) {
-            LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet found in Content Store, answering Interest Packet";
             network::node::protocol::data_packet* data_packet = this->m_store->get(packet.id());
             packet.sender()->receive(*data_packet);
 
         } else {
-            LOG(DEBUG) << "[NETWORK_NODE] " << "Data Packet not found in Content Store, sending new Interest Packet";
 
             if (this->m_pending_interest_table.count(packet.id()) == 0) {
                 pit_entry entry;
@@ -96,8 +90,6 @@ void network::node::network_node::handle_lookup_request() {
 }
 
 void network::node::network_node::handle_response_request() {
-    LOG(DEBUG) << "[NETWORK_NODE] " << "Verifying incoming Data Packets";
-
     if (!this->m_response_requests.empty()) {
         network::node::protocol::data_packet packet = this->m_response_requests.front();
 
@@ -117,7 +109,6 @@ void network::node::network_node::handle_response_request() {
 }
 
 void network::node::network_node::register_forwarding_node(network_node* forwarding_node) {
-    LOG(DEBUG) << "[NETWORK_NODE] " << "Registering new Forwarding node"; // current and forwarding ids?
     this->m_forwarding_nodes.push_back(new link(forwarding_node));
 }
 

@@ -19,7 +19,7 @@ namespace network {
             topology() {};
             virtual ~topology() {};
 
-            virtual std::list<network::node::network_node*> generate(topology_config* config) = 0;
+            virtual network::node::network_node** generate(topology_config* config) = 0;
         };
     }
 }
