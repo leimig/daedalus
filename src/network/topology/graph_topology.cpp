@@ -35,28 +35,21 @@ network::node::network_node** network::topology::graph_topology::generate(networ
 
         if ((nodes_count + nodes_in_cluster) > config->number_of_nodes) {
             nodes_in_cluster = config->number_of_nodes - nodes_count;
-            LOG(INFO) << "[TOPOLOGY_BULD] " << "Nodes in Cluster (updated):" << nodes_in_cluster;
+            LOG(INFO) << "[TOPOLOGY_BULD] " << "Nodes in Cluster (updated): " << nodes_in_cluster;
         }
 
-        int start_pos = *clusters_pos.end();
+        int start_pos = *(clusters_pos.begin() + (clusters_pos.size() - 1));
         // start position of the next cluster
         clusters_pos.push_back(start_pos + nodes_in_cluster);
-        LOG(INFO) << "[TOPOLOGY_BULD] " << "AA";
 
         /**************************************************************
         **************            BUILD CLUSTER          **************
         **************************************************************/
         for (int i = 0; i < nodes_in_cluster; i++) {
-            // LOG(INFO) << "[TOPOLOGY_BULD] " << "BB";
-            // nodes[start_pos + i] = (network::node::network_node*)malloc(sizeof(network::node::network_node));
-            // Segmentation fault is happening here
             nodes[start_pos + i] = new network::node::network_node(++uuid, new network::node::cache::no_cache);
-            // LOG(INFO) << "[TOPOLOGY_BULD] " << "CC";
-            // LOG(INFO) << "[TOPOLOGY_BULD] " << "DD";
-            // LOG(INFO) << "[TOPOLOGY_BULD] " << "EE";
             nodes_count++;
 
-            LOG(INFO) << "[TOPOLOGY_BULD] " << "Created Node ID:" << uuid;
+            LOG(INFO) << "[TOPOLOGY_BULD] " << "Created Node ID: " << uuid;
         }
 
         LOG(INFO) << "[TOPOLOGY_BULD] " << "Connecting Cluster Nodes";
