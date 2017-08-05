@@ -29,18 +29,14 @@ int network::node::network_node::id() {
 void network::node::network_node::run() {
     // Need to find another way to finish node's thread
     while (!this->m_lookup_requests.empty() && !this->m_response_requests.empty()) {
-        LOG(INFO) << "[NETWORK_NODE] " << "Verifying for incoming packets";
+        LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Verifying for incoming packets";
 
         this->handle_lookup_request();
-
         std::this_thread::yield();
 
         this->handle_response_request();
-
         std::this_thread::yield();
     }
-
-    LOG(INFO) << "[NETWORK_NODE] " << "Finishing execution";
 }
 
 void network::node::network_node::handle_lookup_request() {
@@ -113,11 +109,11 @@ void network::node::network_node::register_forwarding_node(network_node* forward
 }
 
 void network::node::network_node::lookup(network::node::protocol::interest_packet packet) {
-    LOG(INFO) << "[NETWORK_NODE] " << "Receiving Interest Packet for " << packet.id();
+    LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Interest Packet for " << packet.id();
     this->m_lookup_requests.push_back(packet);
 }
 
 void network::node::network_node::receive(network::node::protocol::data_packet packet) {
-    LOG(INFO) << "[NETWORK_NODE] " << "Receiving Data Packet for " << packet.id();
+    LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Data Packet for " << packet.id();
     this->m_response_requests.push_back(packet);
 }

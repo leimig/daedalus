@@ -3,13 +3,13 @@
 #include "./../../lib/easylogging++.h"
 #include "network_simulator.hpp"
 
-network::network_simulator::network_simulator(std::list<node::network_node*> nodes) {
+network::network_simulator::network_simulator(node::network_node **&nodes) {
     this->m_nodes = nodes;
 }
 
 network::network_simulator::~network_simulator() {
     // delete m_threads
-    LOG(INFO) << "[NETWORK_SIMULATOR] " << "Destroying threads";
+    LOG(INFO) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Destroying threads";
     std::list<std::thread*>::iterator thread_i;
 
     for (thread_i = this->m_threads.begin(); thread_i != this->m_threads.end(); ++thread_i) {
@@ -18,21 +18,24 @@ network::network_simulator::~network_simulator() {
     }
 
     // delete m_nodes
-    LOG(INFO) << "[NETWORK_SIMULATOR] " << "Destroying nodes";
-    std::list<node::network_node*>::iterator node_i;
+    LOG(INFO) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Destroying nodes";
+    for (int i = 0; this->m_nodes[i] != nullptr; i++)
+        delete this->m_nodes[i];
 
-    for (node_i = this->m_nodes.begin(); node_i != this->m_nodes.end(); ++node_i)
-        delete *node_i;
+    delete[] this->m_nodes;
 }
 
 void network::network_simulator::start() {
     // start up threads
-    LOG(INFO) << "[NETWORK_SIMULATOR] " << "Starting simulation";
-    LOG(INFO) << "[NETWORK_SIMULATOR] " << "Starting up threads";
-    std::list<node::network_node*>::iterator node_i;
+    LOG(INFO) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Starting simulation";
+    LOG(INFO) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Starting up threads";
 
-    for (node_i = this->m_nodes.begin(); node_i != this->m_nodes.end(); ++node_i) {
-        std::thread* t = new std::thread([&] (node::network_node* node) { node->run(); }, *node_i);
+    for (int i = 0; this->m_nodes[i] != nullptr; i++) {
+        std::thread* t = new std::thread(
+            [&] (node::network_node* node) { node->run(); },
+            this->m_nodes[i]
+        );
+
         this->m_threads.push_back(t);
     }
 }

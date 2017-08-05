@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
     /**************************************************************
     **************          GENERATE NETWORK         **************
     **************************************************************/
-    LOG(INFO) << "[PROGRAM] " << "Setting up network topology";
+    LOG(INFO) << "[DAEDALUS] " << "Setting up network topology";
     std::string topology_type = network::topology::topology_factory::GRAPH_TYPE;
 
     if (parser.cmd_option_exists("-t")) {
@@ -49,27 +49,27 @@ int main(int argc, char const *argv[]) {
 
     print_configuration(&topology_config);
 
-    network::node::network_node** nodes = topology->generate(&topology_config);
+    network::node::network_node **nodes = topology->generate(&topology_config);
     delete topology;
 
     /**************************************************************
     **************         START SIMULATION          **************
     **************************************************************/
-    LOG(INFO) << "[PROGRAM] " << "Setting up network simulator";
-    // network::network_simulator simulator(nodes);
+    LOG(INFO) << "[DAEDALUS] Setting up network simulator";
+    network::network_simulator simulator(nodes);
 
-    // LOG(INFO) << "[PROGRAM] " << "Starting simulation";
-    // simulator.start();
+    LOG(INFO) << "[DAEDALUS] Starting simulation";
+    simulator.start();
 
     return 0;
 }
 
 void print_configuration(network::topology::topology_config* topology_config) {
-    LOG(INFO) << "[PROGRAM][CONFIG] "
+    LOG(INFO) << "[DAEDALUS][CONFIG] "
         << "Number of nodes: "
         << topology_config->number_of_nodes;
 
-    LOG(INFO) << "[PROGRAM][CONFIG] "
+    LOG(INFO) << "[DAEDALUS][CONFIG] "
         << "Maximum number of nodes in cluster: "
         << topology_config->max_number_of_nodes_in_clusters;
 }
