@@ -27,16 +27,17 @@ int network::node::network_node::id() {
 }
 
 void network::node::network_node::run() {
-    // Need to find another way to finish node's thread
-    while (!this->m_lookup_requests.empty() && !this->m_response_requests.empty()) {
-        LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Verifying for incoming packets";
+    LOG(INFO) << "[DAEDALUS][NETWORK_NODE][" << this->m_id << "] " << "Verifying for incoming packets";
 
-        this->handle_lookup_request();
-        std::this_thread::yield();
+    this->handle_lookup_request();
+    std::this_thread::yield();
 
-        this->handle_response_request();
-        std::this_thread::yield();
-    }
+    this->handle_response_request();
+    std::this_thread::yield();
+}
+
+bool network::node::network_node::has_pending_requests() {
+    return !this->m_lookup_requests.empty() || !this->m_response_requests.empty();
 }
 
 void network::node::network_node::handle_lookup_request() {

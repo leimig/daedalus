@@ -45,6 +45,7 @@ namespace network {
             int id();
 
             void run();
+            bool has_pending_requests();
             void handle_lookup_request();
             void handle_response_request();
 
