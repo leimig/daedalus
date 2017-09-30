@@ -8,14 +8,14 @@ namespace network {
         namespace protocol {
             class packet {
             private:
-                network::node::network_node* m_sender;
+                int m_sender_id;
 
             public:
-                packet(network::node::network_node* sender) { this->m_sender = sender; };
+                packet(int sender_id) { this->m_sender_id = sender_id; };
                 virtual ~packet() {};
 
-                virtual std::string const& id() const = 0;
-                inline network::node::network_node* sender() { return this->m_sender; };
+                virtual std::string const& packet_id() const = 0;
+                inline int sender_id() { return this->m_sender_id; };
             };
         }
     }

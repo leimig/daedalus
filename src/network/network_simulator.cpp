@@ -7,7 +7,7 @@
 
 network::network_simulator::network_simulator(network::network_config config) {
     this->m_config = config;
-    this->m_node = new network::node::network_node(this, new network::node::cache::no_cache);
+    this->m_node = new network::node::network_node(1, this, new network::node::cache::no_cache);
 }
 
 network::network_simulator::~network_simulator() {

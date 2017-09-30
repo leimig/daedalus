@@ -23,19 +23,21 @@ namespace network {
         class network_interface;
 
         typedef struct pit_entry {
+            int id;
             std::chrono::milliseconds timestamp;
-            network::node::network_node* node;
         } pit_entry;
 
         class network_node {
         private:
+            int m_id;
+
             network::node::content_store* m_store;
             network::node::network_interface* m_interface;
 
             std::map<std::string, std::list<pit_entry>> m_pending_interest_table;
 
         public:
-            network_node(network::node::network_interface* interface, network::node::cache::policy* policy);
+            network_node(int id, network::node::network_interface* interface, network::node::cache::policy* policy);
             ~network_node();
 
             void handle_lookup_request();
