@@ -5,34 +5,32 @@
 #include <thread>
 #include <mutex>
 
+#include "./node/network_interface.hpp"
 #include "./node/network_node.hpp"
+#include "./node/protocol/packet.hpp"
+#include "./node/protocol/data_packet.hpp"
+#include "./node/protocol/interest_packet.hpp"
 
 namespace network {
     struct network_config {
-        std::string topology_name;
-
-        int number_of_threads = 10;
-        int number_of_nodes = 50;
-        int max_number_of_nodes_in_clusters = 5;
+        std::string policy_name;
     };
 
     typedef network_config network_config;
 
-    class network_simulator {
+    class network_simulator : public network::node::network_interface {
     private:
         network::network_config m_config;
-        int m_last_thread_index;
-        std::mutex m_next_thread_mutex;
-
-        std::list<std::thread*> m_threads;
-        node::network_node **m_nodes;
+        node::network_node *m_node;
 
     public:
-        network_simulator(network::network_config config, network::node::network_node **&nodes);
+        network_simulator(network::network_config config);
         ~network_simulator();
 
         void start();
-        network::node::network_node* next_node();
+
+        virtual void lookup(node::protocol::interest_packet packet);
+        virtual void respond(int id, node::protocol::data_packet packet);
     };
 }
 
