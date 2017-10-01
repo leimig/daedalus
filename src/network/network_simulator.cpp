@@ -16,33 +16,49 @@ network::network_simulator::~network_simulator() {
     delete this->m_node;
 }
 
-void network::network_simulator::start() {
+void network::network_simulator::run() {
     srand((int) time(0));
 
-    VLOG(0) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Starting simulation";
-
     this->warmup();
-
-    // for (int i = 0; this->m_nodes[i] != nullptr; i++) {
-    //     std::thread* t = new std::thread(thread_loop, this);
-    //     this->m_threads.push_back(t);
-    // }
+    this->simulate();
 }
 
 void network::network_simulator::warmup() {
-    for (int i = 0; i < this->m_config.warmup_size; i++) {
-        int sender_id = (rand() % this->m_config.network_three_size) + 1;
-        std::string packet_id = std::to_string((rand() % this->m_config.number_of_packets) + 1);
+    VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
 
-        node::protocol::interest_packet packet(sender_id, packet_id);
-        this->m_node->lookup(packet);
+    for (int i = 0; i < this->m_config.warmup_size; i++) {
+        this->send_interest_packet();
     }
 }
 
-void network::network_simulator::lookup(node::protocol::interest_packet packet) {
+void network::network_simulator::simulate() {
+    VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Starting simulation";
 
+    for (int i = 0; i < this->m_config.round_size; i++) {
+        this->send_interest_packet();
+    }
 }
 
-void network::network_simulator::respond(int id, node::protocol::data_packet packet) {
+void network::network_simulator::send_interest_packet() {
+    int sender_id = (rand() % this->m_config.network_three_size) + 1;
+    std::string packet_id = std::to_string((rand() % this->m_config.number_of_packets) + 1);
 
+    node::protocol::interest_packet packet(sender_id, packet_id);
+    this->m_node->handle(packet);
+}
+
+void network::network_simulator::handle(node::protocol::packet packet) {
+    if (network::node::protocol::interest_packet* p = dynamic_cast<network::node::protocol::interest_packet*>(&packet)) {
+        this->handle_lookup(*p);
+    } else if (network::node::protocol::data_packet* p = dynamic_cast<network::node::protocol::data_packet*>(&packet)) {
+        this->handle_answer(*p);
+    }
+}
+
+void network::network_simulator::handle_lookup(node::protocol::interest_packet packet) {
+    // Queue the request and answer after some time
+}
+
+void network::network_simulator::handle_answer(node::protocol::data_packet packet) {
+    // Do nothing
 }

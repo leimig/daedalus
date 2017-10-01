@@ -18,19 +18,30 @@ network::node::network_node::~network_node() {
     // this->m_interface is not responsibility of the network_node
 }
 
-void network::node::network_node::lookup(network::node::protocol::interest_packet packet) {
+void network::node::network_node::handle(network::node::protocol::packet packet) {
+    if (network::node::protocol::interest_packet* p = dynamic_cast<network::node::protocol::interest_packet*>(&packet)) {
+        this->handle_lookup(*p);
+    } else if (network::node::protocol::data_packet* p = dynamic_cast<network::node::protocol::data_packet*>(&packet)) {
+        this->handle_answer(*p);
+    }
+}
+
+void network::node::network_node::handle_lookup(network::node::protocol::interest_packet packet) {
     VLOG(9) << "[DAEDALUS][NETWORK_NODE] "
         << "Receiving Interest Packet for " << packet.packet_id()
-        << " from node " << packet.sender_id();
+        << " from node " << packet.originator_id();
 
     if (this->m_store->has(packet.packet_id())) {
-        network::node::protocol::data_packet* data_packet = this->m_store->get(packet.packet_id());
-        this->m_interface->respond(packet.sender_id(), *data_packet);
+        // calling `get` from the `content_store` allows the cache to be updated
+        this->m_store->get(packet.packet_id());
+
+        network::node::protocol::data_packet data_packet(this->m_id, packet.originator_id(), packet.packet_id());
+        this->m_interface->handle(data_packet);
 
     } else {
         if (this->m_pending_interest_table.count(packet.packet_id()) == 0) {
             pit_entry entry;
-            entry.id = packet.sender_id();
+            entry.id = packet.originator_id();
             entry.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
             );
@@ -40,13 +51,13 @@ void network::node::network_node::lookup(network::node::protocol::interest_packe
 
             this->m_pending_interest_table[packet.packet_id()] = l;
 
-            this->m_interface->lookup(
+            this->m_interface->handle(
                 network::node::protocol::interest_packet(this->m_id, packet.packet_id())
             );
 
         } else {
             pit_entry entry;
-            entry.id = packet.sender_id();
+            entry.id = packet.originator_id();
             entry.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
             );
@@ -56,7 +67,7 @@ void network::node::network_node::lookup(network::node::protocol::interest_packe
     }
 }
 
-void network::node::network_node::receive(network::node::protocol::data_packet packet) {
+void network::node::network_node::handle_answer(network::node::protocol::data_packet packet) {
     VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Data Packet for " << packet.packet_id();
 
     if (this->m_pending_interest_table.count(packet.packet_id()) == 1) {
@@ -65,7 +76,8 @@ void network::node::network_node::receive(network::node::protocol::data_packet p
         std::list<pit_entry>::iterator entry_i;
 
         for (entry_i = pending.begin(); entry_i != pending.end(); ++entry_i) {
-            this->m_interface->respond(entry_i->id, packet);
+            node::protocol::data_packet tmp_packet(this->m_id, entry_i->id, packet.packet_id());
+            this->m_interface->handle(tmp_packet);
         }
     }
 

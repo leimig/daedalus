@@ -25,15 +25,20 @@ namespace network {
         network::network_config m_config;
         node::network_node *m_node;
 
+        void warmup();
+        void simulate();
+        void send_interest_packet();
+
+        void handle_lookup(node::protocol::interest_packet packet);
+        void handle_answer(node::protocol::data_packet packet);
+
     public:
         network_simulator(network::network_config config);
         ~network_simulator();
 
-        void start();
-        void warmup();
+        void run();
 
-        virtual void lookup(node::protocol::interest_packet packet);
-        virtual void respond(int id, node::protocol::data_packet packet);
+        virtual void handle(node::protocol::packet packet);
     };
 }
 

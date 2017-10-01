@@ -12,7 +12,7 @@ namespace network {
                 std::string m_packet_id;
 
             public:
-                interest_packet(int sender_id, std::string packet_id) : packet(sender_id) {
+                interest_packet(int originator_id, std::string packet_id) : packet(originator_id) {
                     this->m_packet_id = packet_id;
                 }
 

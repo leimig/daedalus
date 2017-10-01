@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]) {
     network::network_simulator simulator(network_config);
 
     VLOG(0) << "[DAEDALUS] Starting simulation";
-    simulator.start();
+    simulator.run();
 
     return 0;
 }
@@ -96,9 +96,9 @@ void print_help() {
     std::cout << "-ts <arg>   Number of nodes in the network three under the target node. Default: " << network_config.network_three_size << std::endl;
     std::cout << "-np <arg>   Number of unique packets. Default: "                                   << network_config.number_of_packets  << std::endl;
     std::cout << "-rs <arg>   Number of packets used during simulation. Default: "                   << network_config.round_size         << std::endl;
-    std::cout << "-ws <arg>   Number of packets used during warm-up. Default: "                      << network_config.warmup_size        << std::endl;
-
+    std::cout << "-ws <arg>   Number of packets used during warm up. Default: "                      << network_config.warmup_size        << std::endl;
     std::cout << std::endl;
+
     std::cout << "LOGGING OPTIONS:" << std::endl;
-    std::cout << "--v=<arg>   Verbosity Level. Default: 0. Possible options: 0 (INFO), 9 (DEBUG)"  << std::endl;
+    std::cout << "--v=<arg>   Verbosity Level. Default: 0. Possible options: 0 (GENERAL), 1 (INFO), 9 (DEBUG)"  << std::endl;
 }
