@@ -25,12 +25,18 @@ namespace network {
         network::network_config m_config;
         node::network_node *m_node;
 
+        int m_round_step;
+        int m_warmup_step;
+
         void warmup();
-        void simulate();
         void send_interest_packet();
 
         void handle_lookup(node::protocol::interest_packet packet);
         void handle_answer(node::protocol::data_packet packet);
+
+        bool is_warmup_active();
+        bool is_round_active();
+        node::protocol::interest_packet* next_lookup_to_answer();
 
     public:
         network_simulator(network::network_config config);

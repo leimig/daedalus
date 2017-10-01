@@ -21,8 +21,11 @@ network::node::network_node::~network_node() {
 void network::node::network_node::handle(network::node::protocol::packet packet) {
     if (network::node::protocol::interest_packet* p = dynamic_cast<network::node::protocol::interest_packet*>(&packet)) {
         this->handle_lookup(*p);
+        delete p;
+
     } else if (network::node::protocol::data_packet* p = dynamic_cast<network::node::protocol::data_packet*>(&packet)) {
         this->handle_answer(*p);
+        delete p;
     }
 }
 
