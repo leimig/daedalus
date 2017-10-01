@@ -19,7 +19,10 @@ network::node::network_node::~network_node() {
 }
 
 void network::node::network_node::lookup(network::node::protocol::interest_packet packet) {
-    LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Interest Packet for " << packet.packet_id();
+    VLOG(9) << "[DAEDALUS][NETWORK_NODE] "
+        << "Receiving Interest Packet for " << packet.packet_id()
+        << " from node " << packet.sender_id();
+
     if (this->m_store->has(packet.packet_id())) {
         network::node::protocol::data_packet* data_packet = this->m_store->get(packet.packet_id());
         this->m_interface->respond(packet.sender_id(), *data_packet);
@@ -54,7 +57,7 @@ void network::node::network_node::lookup(network::node::protocol::interest_packe
 }
 
 void network::node::network_node::receive(network::node::protocol::data_packet packet) {
-    LOG(INFO) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Data Packet for " << packet.packet_id();
+    VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Data Packet for " << packet.packet_id();
 
     if (this->m_pending_interest_table.count(packet.packet_id()) == 1) {
         std::list<pit_entry> pending = this->m_pending_interest_table[packet.packet_id()];

@@ -2,8 +2,6 @@
 #define NETWORK_SIMULATOR_HPP
 
 #include <list>
-#include <thread>
-#include <mutex>
 
 #include "./node/network_interface.hpp"
 #include "./node/network_node.hpp"
@@ -13,7 +11,11 @@
 
 namespace network {
     struct network_config {
-        std::string policy_name;
+        std::string policy_name = "NO_POLICY";
+        int network_three_size = 50;
+        int number_of_packets = 500;
+        int round_size = 8000;
+        int warmup_size = 500;
     };
 
     typedef network_config network_config;
@@ -28,6 +30,7 @@ namespace network {
         ~network_simulator();
 
         void start();
+        void warmup();
 
         virtual void lookup(node::protocol::interest_packet packet);
         virtual void respond(int id, node::protocol::data_packet packet);
