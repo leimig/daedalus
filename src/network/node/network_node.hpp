@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+#include "./network_interface.hpp"
+
 namespace network {
     namespace node {
         namespace protocol {
@@ -20,14 +22,13 @@ namespace network {
 
         class content_store;
         class network_node;
-        class network_interface;
 
         typedef struct pit_entry {
             int id;
             std::chrono::milliseconds timestamp;
         } pit_entry;
 
-        class network_node {
+        class network_node : public network_interface {
         private:
             int m_id;
 
@@ -36,14 +37,12 @@ namespace network {
 
             std::map<std::string, std::list<pit_entry>> m_pending_interest_table;
 
-            void handle_lookup(protocol::interest_packet packet);
-            void handle_answer(protocol::data_packet packet);
-
         public:
             network_node(int id, network::node::network_interface* interface, network::node::cache::policy* policy);
             ~network_node();
 
-            void handle(protocol::packet packet);
+            virtual void handle_lookup(network::node::protocol::interest_packet packet);
+            virtual void handle_answer(network::node::protocol::data_packet packet);
         };
     }
 }

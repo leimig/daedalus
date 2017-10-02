@@ -1,5 +1,3 @@
-#include <thread>
-
 #include "./../../../lib/easylogging++.h"
 #include "./content_store.hpp"
 #include "./network_node.hpp"
@@ -18,31 +16,26 @@ network::node::network_node::~network_node() {
     // this->m_interface is not responsibility of the network_node
 }
 
-void network::node::network_node::handle(network::node::protocol::packet packet) {
-    if (network::node::protocol::interest_packet* p = dynamic_cast<network::node::protocol::interest_packet*>(&packet)) {
-        this->handle_lookup(*p);
-        delete p;
-
-    } else if (network::node::protocol::data_packet* p = dynamic_cast<network::node::protocol::data_packet*>(&packet)) {
-        this->handle_answer(*p);
-        delete p;
-    }
-}
-
 void network::node::network_node::handle_lookup(network::node::protocol::interest_packet packet) {
     VLOG(9) << "[DAEDALUS][NETWORK_NODE] "
         << "Receiving Interest Packet for " << packet.packet_id()
         << " from node " << packet.originator_id();
 
     if (this->m_store->has(packet.packet_id())) {
+        VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Packet in cache, answering interest packet";
+
         // calling `get` from the `content_store` allows the cache to be updated
         this->m_store->get(packet.packet_id());
 
         network::node::protocol::data_packet data_packet(this->m_id, packet.originator_id(), packet.packet_id());
-        this->m_interface->handle(data_packet);
+        this->m_interface->handle_answer(data_packet);
 
     } else {
+        VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Packet not on cache";
+        VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Creating entry in PIT table";
+
         if (this->m_pending_interest_table.count(packet.packet_id()) == 0) {
+
             pit_entry entry;
             entry.id = packet.originator_id();
             entry.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -54,10 +47,6 @@ void network::node::network_node::handle_lookup(network::node::protocol::interes
 
             this->m_pending_interest_table[packet.packet_id()] = l;
 
-            this->m_interface->handle(
-                network::node::protocol::interest_packet(this->m_id, packet.packet_id())
-            );
-
         } else {
             pit_entry entry;
             entry.id = packet.originator_id();
@@ -67,6 +56,11 @@ void network::node::network_node::handle_lookup(network::node::protocol::interes
 
             this->m_pending_interest_table[packet.packet_id()].push_back(entry);
         }
+
+        VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Looking up packet in network";
+        this->m_interface->handle_lookup(
+            network::node::protocol::interest_packet(this->m_id, packet.packet_id())
+        );
     }
 }
 
@@ -80,7 +74,7 @@ void network::node::network_node::handle_answer(network::node::protocol::data_pa
 
         for (entry_i = pending.begin(); entry_i != pending.end(); ++entry_i) {
             node::protocol::data_packet tmp_packet(this->m_id, entry_i->id, packet.packet_id());
-            this->m_interface->handle(tmp_packet);
+            this->m_interface->handle_answer(tmp_packet);
         }
     }
 

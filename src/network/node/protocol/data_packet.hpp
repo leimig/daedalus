@@ -20,7 +20,9 @@ namespace network {
                     this->m_packet_id = packet_id;
                 }
 
-                inline int target_id() { return this->m_target_id; };
+                virtual ~data_packet() {};
+
+                int target_id() { return this->m_target_id; };
                 std::string const& packet_id() const { return this->m_packet_id; }
             };
         }

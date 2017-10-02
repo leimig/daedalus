@@ -16,6 +16,8 @@ namespace network {
                     this->m_packet_id = packet_id;
                 }
 
+                virtual ~interest_packet() {};
+
                 std::string const& packet_id() const { return this->m_packet_id; }
             };
         }

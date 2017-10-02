@@ -40,7 +40,7 @@ void network::network_simulator::run() {
         }
     }
 
-    VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Starting simulation";
+    VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Running simulation";
 
     while (true) {
         network::node::protocol::interest_packet *p = this->next_lookup_to_answer();
@@ -54,10 +54,12 @@ void network::network_simulator::run() {
             // answer lookup packet
         }
 
-        if (!this->is_warmup_active() && p == NULL) {
+        if (!this->is_round_active() && p == NULL) {
             break;
         }
     }
+
+    VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Wrapping up simulation";
 }
 
 bool network::network_simulator::is_warmup_active() {
@@ -77,24 +79,23 @@ void network::network_simulator::send_interest_packet() {
     std::string packet_id = std::to_string((rand() % this->m_config.number_of_packets) + 1);
 
     network::node::protocol::interest_packet packet(sender_id, packet_id);
-    this->m_node->handle(packet);
+    this->m_node->handle_lookup(packet);
 }
 
-void network::network_simulator::handle(node::protocol::packet packet) {
-    if (network::node::protocol::interest_packet* p = dynamic_cast<network::node::protocol::interest_packet*>(&packet)) {
-        this->handle_lookup(*p);
-        delete p;
+void network::network_simulator::handle_lookup(network::node::protocol::interest_packet packet) {
+    VLOG(9) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Interest Packet received";
 
-    } else if (network::node::protocol::data_packet* p = dynamic_cast<network::node::protocol::data_packet*>(&packet)) {
-        this->handle_answer(*p);
-        delete p;
-    }
+    received_lookup entry;
+    entry.packet_id = packet.packet_id();
+
+    auto delay = std::chrono::milliseconds();
+    auto now = std::chrono::system_clock::now().time_since_epoch();
+
+    entry.response_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now + delay);
+
+    this->m_received_lookups.push_back(entry);
 }
 
-void network::network_simulator::handle_lookup(node::protocol::interest_packet packet) {
-
-}
-
-void network::network_simulator::handle_answer(node::protocol::data_packet packet) {
+void network::network_simulator::handle_answer(network::node::protocol::data_packet packet) {
     // Do nothing
 }

@@ -57,6 +57,8 @@ int main(int argc, char const *argv[]) {
     VLOG(0) << "[DAEDALUS] Starting simulation";
     simulator.run();
 
+    VLOG(0) << "[DAEDALUS] Simulation finished";
+
     return 0;
 }
 
@@ -100,5 +102,5 @@ void print_help() {
     std::cout << std::endl;
 
     std::cout << "LOGGING OPTIONS:" << std::endl;
-    std::cout << "--v=<arg>   Verbosity Level. Default: 0. Possible options: 0 (GENERAL), 1 (INFO), 9 (DEBUG)"  << std::endl;
+    std::cout << "--v=<arg>   Verbosity Level. Default: 0. Possible options: 0 (GENERAL), 1 (INFO), 2 (WARNING), 9 (DEBUG)"  << std::endl;
 }
