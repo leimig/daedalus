@@ -4,6 +4,7 @@
 #include <list>
 #include <chrono>
 #include <string>
+#include <memory>
 
 #include "./node/network_interface.hpp"
 #include "./node/network_node.hpp"
@@ -40,7 +41,7 @@ namespace network {
 
         bool is_warmup_active();
         bool is_round_active();
-        node::protocol::interest_packet* next_lookup_to_answer();
+        std::shared_ptr<network::node::protocol::data_packet> next_lookup_to_answer();
 
     public:
         network_simulator(network::network_config config);

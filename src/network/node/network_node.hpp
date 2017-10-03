@@ -41,6 +41,8 @@ namespace network {
             network_node(int id, network::node::network_interface* interface, network::node::cache::policy* policy);
             ~network_node();
 
+            virtual int id() { return this->m_id; };
+
             virtual void handle_lookup(network::node::protocol::interest_packet packet);
             virtual void handle_answer(network::node::protocol::data_packet packet);
         };

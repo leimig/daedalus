@@ -24,18 +24,22 @@ void network::network_simulator::run() {
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
 
     while (true) {
-        network::node::protocol::interest_packet *p = this->next_lookup_to_answer();
-
         if (this->is_warmup_active()) {
             this->send_interest_packet();
             this->m_warmup_step++;
         }
 
-        if (p) {
-            // answer lookup packet
-        }
+        std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
 
-        if (!this->is_warmup_active() && p == NULL) {
+        do {
+            p = this->next_lookup_to_answer();
+
+            if (p) {
+                this->m_node->handle_answer(*p);
+            }
+        } while(p);
+
+        if (!this->is_warmup_active() && p == nullptr) {
             break;
         }
     }
@@ -43,18 +47,22 @@ void network::network_simulator::run() {
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Running simulation";
 
     while (true) {
-        network::node::protocol::interest_packet *p = this->next_lookup_to_answer();
-
         if (this->is_round_active()) {
             this->send_interest_packet();
             this->m_round_step++;
         }
 
-        if (p) {
-            // answer lookup packet
-        }
+        std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
 
-        if (!this->is_round_active() && p == NULL) {
+        do {
+            p = this->next_lookup_to_answer();
+
+            if (p) {
+                this->m_node->handle_answer(*p);
+            }
+        } while(p);
+
+        if (!this->is_round_active() && p == nullptr) {
             break;
         }
     }
@@ -70,8 +78,26 @@ bool network::network_simulator::is_round_active() {
     return this->m_round_step < this->m_config.round_size;
 }
 
-network::node::protocol::interest_packet* network::network_simulator::next_lookup_to_answer() {
-    return NULL;
+std::shared_ptr<network::node::protocol::data_packet> network::network_simulator::next_lookup_to_answer() {
+    if (this->m_received_lookups.empty()) {
+        return nullptr;
+    }
+
+    auto now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    std::shared_ptr<network::node::protocol::data_packet> packet_ptr;
+
+    for (received_lookup entry : this->m_received_lookups) {
+        if (entry.response_timestamp <= now) {
+            packet_ptr = std::make_shared<network::node::protocol::data_packet>(
+                network::node::protocol::data_packet(0, this->m_node->id(), entry.packet_id)
+            );
+
+            this->m_received_lookups.remove(entry);
+            break;
+        }
+    }
+
+    return packet_ptr;
 }
 
 void network::network_simulator::send_interest_packet() {

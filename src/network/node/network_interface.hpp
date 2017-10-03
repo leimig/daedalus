@@ -18,6 +18,8 @@ namespace network {
             network_interface() {};
             virtual ~network_interface() {};
 
+            virtual int id();
+
             virtual void handle_lookup(network::node::protocol::interest_packet packet) = 0;
             virtual void handle_answer(network::node::protocol::data_packet packet) = 0;
         };
