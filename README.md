@@ -10,6 +10,7 @@ An ICN Cache Simulator
 - [x] Console parameters.
 - [x] Topology creator. Initially, only Graph Topology will be accepted.
 - [x] Thread pool and scheduling algorithm for node execution.
-- [ ] Create warm-up algorithm.
+- [x] Create warm-up algorithm.
+- [ ] Create execution algorithm.
 - [ ] Gather execution data.
 - [ ] Plot results.

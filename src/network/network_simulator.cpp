@@ -8,7 +8,11 @@
 
 network::network_simulator::network_simulator(network::network_config config) {
     this->m_config = config;
-    this->m_node = new network::node::network_node(0, this, new network::node::cache::no_cache);
+    this->m_node = new network::node::network_node(
+        this->m_config.network_three_size + 1,
+        this,
+        new network::node::cache::no_cache
+    );
 
     this->m_round_step = 0;
     this->m_warmup_step = 0;
@@ -18,54 +22,18 @@ network::network_simulator::~network_simulator() {
     delete this->m_node;
 }
 
+int network::network_simulator::id() {
+    return 0;
+}
+
 void network::network_simulator::run() {
     srand((int) time(0));
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
-
-    while (true) {
-        if (this->is_warmup_active()) {
-            this->send_interest_packet();
-            this->m_warmup_step++;
-        }
-
-        std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
-
-        do {
-            p = this->next_lookup_to_answer();
-
-            if (p) {
-                this->m_node->handle_answer(*p);
-            }
-        } while(p);
-
-        if (!this->is_warmup_active() && p == nullptr) {
-            break;
-        }
-    }
+    this->run_round([&]() -> bool { return this->is_warmup_active(); }, &this->m_warmup_step);
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Running simulation";
-
-    while (true) {
-        if (this->is_round_active()) {
-            this->send_interest_packet();
-            this->m_round_step++;
-        }
-
-        std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
-
-        do {
-            p = this->next_lookup_to_answer();
-
-            if (p) {
-                this->m_node->handle_answer(*p);
-            }
-        } while(p);
-
-        if (!this->is_round_active() && p == nullptr) {
-            break;
-        }
-    }
+    this->run_round([&]() -> bool { return this->is_round_active(); }, &this->m_round_step);
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Wrapping up simulation";
 }
@@ -78,6 +46,30 @@ bool network::network_simulator::is_round_active() {
     return this->m_round_step < this->m_config.round_size;
 }
 
+void network::network_simulator::run_round(std::function<bool()>& is_round_active, int* step) {
+    while (true) {
+        if (is_round_active()) {
+            VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << step;
+            this->send_interest_packet();
+            step++;
+        }
+
+        std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
+
+        do {
+            p = this->next_lookup_to_answer();
+
+            if (p) {
+                this->m_node->handle_answer(*p);
+            }
+        } while(p);
+
+        if (!is_round_active() && p == nullptr) {
+            break;
+        }
+    }
+}
+
 std::shared_ptr<network::node::protocol::data_packet> network::network_simulator::next_lookup_to_answer() {
     if (this->m_received_lookups.empty()) {
         return nullptr;
@@ -86,15 +78,22 @@ std::shared_ptr<network::node::protocol::data_packet> network::network_simulator
     auto now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
     std::shared_ptr<network::node::protocol::data_packet> packet_ptr;
 
-    for (received_lookup entry : this->m_received_lookups) {
+    std::list<received_lookup>::iterator it;
+
+    for (it = this->m_received_lookups.begin(); it != this->m_received_lookups.end(); it++) {
+        received_lookup entry = *it;
+
         if (entry.response_timestamp <= now) {
             packet_ptr = std::make_shared<network::node::protocol::data_packet>(
                 network::node::protocol::data_packet(0, this->m_node->id(), entry.packet_id)
             );
 
-            this->m_received_lookups.remove(entry);
             break;
         }
+    }
+
+    if (packet_ptr) {
+        this->m_received_lookups.erase(it);
     }
 
     return packet_ptr;
@@ -109,7 +108,8 @@ void network::network_simulator::send_interest_packet() {
 }
 
 void network::network_simulator::handle_lookup(network::node::protocol::interest_packet packet) {
-    VLOG(9) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Interest Packet received";
+    VLOG(9) << "[DAEDALUS][NETWORK_NODE] "
+        << "Receiving Interest Packet for " << packet.packet_id();
 
     received_lookup entry;
     entry.packet_id = packet.packet_id();

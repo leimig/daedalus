@@ -5,6 +5,7 @@
 #include <chrono>
 #include <string>
 #include <memory>
+#include <functional>
 
 #include "./node/network_interface.hpp"
 #include "./node/network_node.hpp"
@@ -41,6 +42,7 @@ namespace network {
 
         bool is_warmup_active();
         bool is_round_active();
+        void run_round(std::function<bool()>& is_round_active, int* step);
         std::shared_ptr<network::node::protocol::data_packet> next_lookup_to_answer();
 
     public:
@@ -48,6 +50,8 @@ namespace network {
         ~network_simulator();
 
         void run();
+
+        virtual int id();
 
         virtual void handle_lookup(network::node::protocol::interest_packet packet);
         virtual void handle_answer(network::node::protocol::data_packet packet);
