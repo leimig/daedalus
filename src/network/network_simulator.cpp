@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <thread>
 
 #include "./../../lib/easylogging++.h"
 #include "./node/cache/policy.hpp"
@@ -58,6 +59,8 @@ void network::network_simulator::run_round(int* step, int* size) {
         if (*step >= *size && p == nullptr) {
             break;
         }
+
+        std::this_thread::yield();
     }
 }
 
