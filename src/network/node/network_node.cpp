@@ -5,7 +5,7 @@
 #include "./protocol/data_packet.hpp"
 #include "./protocol/interest_packet.hpp"
 
-network::node::network_node::network_node(int id, network::node::network_interface* interface, network::node::cache::policy* policy) {
+network::node::network_node::network_node(int id, network::node::cache::policy* policy, network::node::network_interface* interface) {
     this->m_id = id;
     this->m_store = new content_store(policy);
     this->m_interface = interface;

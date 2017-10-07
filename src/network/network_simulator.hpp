@@ -9,13 +9,14 @@
 
 #include "./node/network_interface.hpp"
 #include "./node/network_node.hpp"
+#include "./node/cache/no_cache.hpp"
 #include "./node/protocol/packet.hpp"
 #include "./node/protocol/data_packet.hpp"
 #include "./node/protocol/interest_packet.hpp"
 
 namespace network {
     typedef struct network_config {
-        std::string policy_name = "NO_POLICY";
+        std::string policy_name = network::node::cache::no_cache::id;
         int network_three_size = 50;
         int number_of_packets = 500;
         int round_size = 8000;

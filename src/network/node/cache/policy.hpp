@@ -15,8 +15,10 @@ namespace network {
                 policy() {};
                 virtual ~policy() {};
 
-                virtual bool has(std::string id) = 0;
-                virtual network::node::protocol::data_packet* get(std::string id) = 0;
+                static network::node::cache::policy* make(std::string id);
+
+                virtual bool has(std::string packet_id) = 0;
+                virtual network::node::protocol::data_packet* get(std::string packet_id) = 0;
                 virtual void put(network::node::protocol::data_packet packet) = 0;
             };
         }

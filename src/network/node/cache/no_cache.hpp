@@ -11,11 +11,13 @@ namespace network {
             class no_cache : public policy {
 
             public:
+                static const std::string id;
+
                 no_cache();
                 ~no_cache();
 
-                bool has(std::string id);
-                network::node::protocol::data_packet* get(std::string id);
+                bool has(std::string packet_id);
+                network::node::protocol::data_packet* get(std::string packet_id);
                 void put(network::node::protocol::data_packet packet);
             };
         }

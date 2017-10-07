@@ -38,7 +38,7 @@ namespace network {
             std::map<std::string, std::list<pit_entry>> m_pending_interest_table;
 
         public:
-            network_node(int id, network::node::network_interface* interface, network::node::cache::policy* policy);
+            network_node(int id, network::node::cache::policy* policy, network::node::network_interface* interface);
             ~network_node();
 
             virtual int id() { return this->m_id; };

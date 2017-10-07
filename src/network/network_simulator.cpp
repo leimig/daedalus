@@ -3,15 +3,15 @@
 #include <ctime>
 
 #include "./../../lib/easylogging++.h"
-#include "./node/cache/no_cache.hpp"
+#include "./node/cache/policy.hpp"
 #include "network_simulator.hpp"
 
 network::network_simulator::network_simulator(network::network_config config) {
     this->m_config = config;
     this->m_node = new network::node::network_node(
         this->m_config.network_three_size + 1,
-        this,
-        new network::node::cache::no_cache
+        network::node::cache::policy::make(config.policy_name),
+        this
     );
 
     this->m_round_step = 0;
