@@ -9,6 +9,7 @@ namespace network {
     namespace node {
         namespace protocol {
             class data_packet;
+            typedef struct data_packet_content data_packet_content;
         }
 
         class content_store {
@@ -20,7 +21,7 @@ namespace network {
             ~content_store();
 
             bool has(std::string id);
-            protocol::data_packet* get(std::string id);
+            network::node::protocol::data_packet_content* get(std::string id);
             void put(protocol::data_packet packet);
         };
     }

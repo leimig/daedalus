@@ -7,14 +7,13 @@ network::node::cache::no_cache::no_cache() {
 }
 
 network::node::cache::no_cache::~no_cache() {
-
 }
 
 bool network::node::cache::no_cache::has(std::string packet_id) {
     return false;
 }
 
-network::node::protocol::data_packet* network::node::cache::no_cache::get(std::string packet_id) {
+network::node::protocol::data_packet_content* network::node::cache::no_cache::get(std::string packet_id) {
     return NULL;
 }
 

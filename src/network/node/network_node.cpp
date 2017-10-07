@@ -25,7 +25,8 @@ void network::node::network_node::handle_lookup(network::node::protocol::interes
         VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Packet in cache, answering interest packet";
 
         // calling `get` from the `content_store` allows the cache to be updated
-        this->m_store->get(packet.packet_id());
+        network::node::protocol::data_packet_content* content = this->m_store->get(packet.packet_id());
+        delete content;
 
         network::node::protocol::data_packet data_packet(this->m_id, packet.originator_id(), packet.packet_id());
         this->m_interface->handle_answer(data_packet);
