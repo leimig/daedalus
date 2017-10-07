@@ -35,7 +35,7 @@ $(TARGET): ./src/$(TARGET).cpp
 	$(CC) -std=c++11 $(CFLAGS) -o ./bin/$(TARGET) $(SRC) $(LFLAGS) $(LIBS) -O0
 
 run:
-	./bin/$(TARGET)
+	./bin/$(TARGET) --v=1
 
 clean:
 	$(RM) $(TARGET)

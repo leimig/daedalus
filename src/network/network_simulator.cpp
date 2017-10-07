@@ -30,28 +30,19 @@ void network::network_simulator::run() {
     srand((int) time(0));
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
-    this->run_round([&]() -> bool { return this->is_warmup_active(); }, &this->m_warmup_step);
+    this->run_round(&this->m_warmup_step, &this->m_config.warmup_size);
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Running simulation";
-    this->run_round([&]() -> bool { return this->is_round_active(); }, &this->m_round_step);
+    this->run_round(&this->m_round_step, &this->m_config.round_size);
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Wrapping up simulation";
 }
 
-bool network::network_simulator::is_warmup_active() {
-    return this->m_warmup_step < this->m_config.warmup_size;
-}
-
-bool network::network_simulator::is_round_active() {
-    return this->m_round_step < this->m_config.round_size;
-}
-
-void network::network_simulator::run_round(std::function<bool()>& is_round_active, int* step) {
+void network::network_simulator::run_round(int* step, int* size) {
     while (true) {
-        if (is_round_active()) {
-            VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << step;
+        if (*step < *size) {
             this->send_interest_packet();
-            step++;
+            (*step)++;
         }
 
         std::shared_ptr<network::node::protocol::data_packet> p = nullptr;
@@ -64,7 +55,7 @@ void network::network_simulator::run_round(std::function<bool()>& is_round_activ
             }
         } while(p);
 
-        if (!is_round_active() && p == nullptr) {
+        if (*step >= *size && p == nullptr) {
             break;
         }
     }
@@ -114,7 +105,7 @@ void network::network_simulator::handle_lookup(network::node::protocol::interest
     received_lookup entry;
     entry.packet_id = packet.packet_id();
 
-    auto delay = std::chrono::milliseconds();
+    auto delay = std::chrono::milliseconds((rand() % 320) + 1);
     auto now = std::chrono::system_clock::now().time_since_epoch();
 
     entry.response_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now + delay);

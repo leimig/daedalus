@@ -40,9 +40,7 @@ namespace network {
         void warmup();
         void send_interest_packet();
 
-        bool is_warmup_active();
-        bool is_round_active();
-        void run_round(std::function<bool()>& is_round_active, int* step);
+        void run_round(int* step, int* size);
         std::shared_ptr<network::node::protocol::data_packet> next_lookup_to_answer();
 
     public:
