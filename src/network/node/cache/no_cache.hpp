@@ -13,7 +13,7 @@ namespace network {
             public:
                 static const std::string id;
 
-                no_cache();
+                no_cache(int cache_size);
                 ~no_cache();
 
                 bool has(std::string packet_id);

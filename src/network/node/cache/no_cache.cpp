@@ -3,7 +3,7 @@
 
 const std::string network::node::cache::no_cache::id = "NO_CACHE";
 
-network::node::cache::no_cache::no_cache() {
+network::node::cache::no_cache::no_cache(int cache_size) : policy(cache_size) {
 }
 
 network::node::cache::no_cache::~no_cache() {

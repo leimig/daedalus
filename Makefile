@@ -29,13 +29,10 @@ SRC = ./lib/*.cc \
 
 default: all
 
-all: clean $(TARGET) run
+all: clean $(TARGET)
 
 $(TARGET): ./src/$(TARGET).cpp
 	$(CC) -std=c++11 $(CFLAGS) -o ./bin/$(TARGET) $(SRC) $(LFLAGS) $(LIBS) -O0
-
-run:
-	./bin/$(TARGET) --v=1
 
 clean:
 	$(RM) $(TARGET)

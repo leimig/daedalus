@@ -11,7 +11,7 @@ network::network_simulator::network_simulator(network::network_config config) {
     this->m_config = config;
     this->m_node = new network::node::network_node(
         this->m_config.network_three_size + 1,
-        network::node::cache::policy::make(config.policy_name),
+        network::node::cache::policy::make(config.policy_name, config.cache_size),
         this
     );
 

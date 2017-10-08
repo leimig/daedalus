@@ -1,5 +1,5 @@
-#ifndef FIFO_HPP
-#define FIFO_HPP
+#ifndef CLIMB_HPP
+#define CLIMB_HPP
 
 #include <string>
 #include <list>
@@ -9,15 +9,15 @@
 namespace network {
     namespace node {
         namespace cache {
-            class fifo : public policy {
+            class climb : public policy {
             private:
                 std::list<std::string> m_data;
 
             public:
                 static const std::string id;
 
-                fifo(int cache_size);
-                ~fifo();
+                climb(int cache_size);
+                ~climb();
 
                 bool has(std::string packet_id);
                 network::node::protocol::data_packet_content* get(std::string packet_id);

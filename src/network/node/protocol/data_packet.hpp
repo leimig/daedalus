@@ -10,7 +10,10 @@ namespace network {
             class packet;
 
             typedef struct data_packet_content {
-                int data = 0;
+                /*
+                 data_packet_content is empty, since we don't need to
+                 transfer data in/out the nodes
+                */
             } data_packet_content;
 
             class data_packet : public packet {

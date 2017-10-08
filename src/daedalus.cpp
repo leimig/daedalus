@@ -30,6 +30,10 @@ int main(int argc, char const *argv[]) {
         network_config.policy_name = parser.get_cmd_option("-p");
     }
 
+    if (parser.cmd_option_exists("-cs")) {
+        network_config.cache_size = stoi(parser.get_cmd_option("-cs"));
+    }
+
     if (parser.cmd_option_exists("-ts")) {
         network_config.network_three_size = stoi(parser.get_cmd_option("-ts"));
     }
@@ -68,6 +72,10 @@ void print_configuration(network::network_config* network_config) {
         << network_config->policy_name;
 
     VLOG(0) << "[DAEDALUS][CONFIG] "
+        << "Cache size: "
+        << network_config->cache_size;
+
+    VLOG(0) << "[DAEDALUS][CONFIG] "
         << "Number of nodes in the network three under the target node: "
         << network_config->network_three_size;
 
@@ -94,11 +102,12 @@ void print_help() {
     std::cout << std::endl;
 
     std::cout << "OPTIONS:" << std::endl;
-    std::cout << "-p  <arg>   Policy name. Default: "                                                << network_config.policy_name        << std::endl;
-    std::cout << "-ts <arg>   Number of nodes in the network three under the target node. Default: " << network_config.network_three_size << std::endl;
-    std::cout << "-np <arg>   Number of unique packets. Default: "                                   << network_config.number_of_packets  << std::endl;
-    std::cout << "-rs <arg>   Round duration. How many packets represent a round. Default: "         << network_config.round_size         << std::endl;
-    std::cout << "-ws <arg>   Number of packets used during warm up. Default: "                      << network_config.warmup_size        << std::endl;
+    std::cout << "-p  <arg>   Policy name. Default: "                                                     << network_config.policy_name        << std::endl;
+    std::cout << "-cs <arg>   Cache size. How many packets can be stored by the Content Store. Default: " << network_config.cache_size         << std::endl;
+    std::cout << "-ts <arg>   Number of nodes in the network three under the target node. Default: "      << network_config.network_three_size << std::endl;
+    std::cout << "-np <arg>   Number of unique packets. Default: "                                        << network_config.number_of_packets  << std::endl;
+    std::cout << "-rs <arg>   Round duration. How many packets represent a round. Default: "              << network_config.round_size         << std::endl;
+    std::cout << "-ws <arg>   Number of packets used during warm up. Default: "                           << network_config.warmup_size        << std::endl;
     std::cout << std::endl;
 
     std::cout << "LOGGING OPTIONS:" << std::endl;

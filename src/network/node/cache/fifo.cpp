@@ -3,7 +3,7 @@
 
 const std::string network::node::cache::fifo::id = "FIFO";
 
-network::node::cache::fifo::fifo() {
+network::node::cache::fifo::fifo(int cache_size) : policy(cache_size) {
 }
 
 network::node::cache::fifo::~fifo() {
@@ -28,9 +28,11 @@ network::node::protocol::data_packet_content* network::node::cache::fifo::get(st
 }
 
 void network::node::cache::fifo::put(network::node::protocol::data_packet packet) {
-    if (!this->m_data.empty()) {
-        this->m_data.pop_front();
-    }
+    if (!this->has(packet.packet_id())) {
+        if (!this->m_data.empty() && this->m_data.size() >= this->cache_size()) {
+            this->m_data.pop_front();
+        }
 
-    this->m_data.push_back(packet.packet_id());
+        this->m_data.push_back(packet.packet_id());
+    }
 }
