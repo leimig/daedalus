@@ -41,6 +41,8 @@ namespace network {
             network_node(int id, network::node::cache::policy* policy, network::node::network_interface* interface);
             ~network_node();
 
+            void enable_tracking();
+
             virtual int id() { return this->m_id; };
 
             virtual void handle_lookup(network::node::protocol::interest_packet packet);

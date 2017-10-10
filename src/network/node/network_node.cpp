@@ -16,6 +16,10 @@ network::node::network_node::~network_node() {
     // this->m_interface is not responsibility of the network_node
 }
 
+void network::node::network_node::enable_tracking() {
+    return this->m_store->enable_tracking();
+}
+
 void network::node::network_node::handle_lookup(network::node::protocol::interest_packet packet) {
     VLOG(9) << "[DAEDALUS][NETWORK_NODE] "
         << "Receiving Interest Packet for " << packet.packet_id()

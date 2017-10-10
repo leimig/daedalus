@@ -22,6 +22,7 @@ TARGET = daedalus
 # src folders
 SRC = ./lib/*.cc \
 	./src/*.cpp \
+	./src/results/*.cpp \
 	./src/network/*.cpp \
 	./src/network/node/*.cpp \
 	./src/network/node/cache/*.cpp \

@@ -33,6 +33,8 @@ void network::network_simulator::run() {
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
     this->run_round(&this->m_warmup_step, &this->m_config.warmup_size);
 
+    this->m_node->enable_tracking();
+
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Running simulation";
     this->run_round(&this->m_round_step, &this->m_config.round_size);
 

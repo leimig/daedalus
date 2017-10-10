@@ -32,7 +32,7 @@ namespace network {
     class network_simulator : public network::node::network_interface {
     private:
         network::network_config m_config;
-        node::network_interface *m_node;
+        node::network_node *m_node;
 
         std::list<received_lookup> m_received_lookups;
 

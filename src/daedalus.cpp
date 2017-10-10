@@ -3,6 +3,7 @@
 
 #include "./../lib/easylogging++.h"
 
+#include "./results/data_collector.hpp"
 #include "./input_parser.hpp"
 #include "./network/network_simulator.hpp"
 
@@ -62,6 +63,11 @@ int main(int argc, char const *argv[]) {
     simulator.run();
 
     VLOG(0) << "[DAEDALUS] Simulation finished";
+
+    VLOG(0) << "[DAEDALUS][RESULTS] Cache lookups: " << results::data_collector::instance()->cache_lookups();
+    VLOG(0) << "[DAEDALUS][RESULTS] Cache hits/misses: "
+        << results::data_collector::instance()->cache_hits() << "/"
+        << results::data_collector::instance()->cache_misses();
 
     return 0;
 }
