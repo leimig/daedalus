@@ -4,6 +4,7 @@
 #include <thread>
 
 #include "./../../lib/easylogging++.h"
+#include "./../../lib/zipf.c"
 #include "./node/cache/policy.hpp"
 #include "network_simulator.hpp"
 
@@ -28,7 +29,7 @@ int network::network_simulator::id() {
 }
 
 void network::network_simulator::run() {
-    srand((int) time(0));
+    rand_val((int) time(0));
 
     VLOG(1) << "[DAEDALUS][NETWORK_SIMULATOR] " << "Warming up";
     this->run_round(&this->m_warmup_step, &this->m_config.warmup_size);
@@ -96,7 +97,7 @@ std::shared_ptr<network::node::protocol::data_packet> network::network_simulator
 }
 
 void network::network_simulator::send_interest_packet() {
-    int sender_id = (rand() % this->m_config.network_three_size) + 1;
+    int sender_id = zipf(this->m_config.zipf_distribution_alpha, this->m_config.network_three_size) + 1;
     std::string packet_id = std::to_string((rand() % this->m_config.number_of_packets) + 1);
 
     network::node::protocol::interest_packet packet(sender_id, packet_id);

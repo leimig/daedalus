@@ -56,6 +56,10 @@ int main(int argc, char const *argv[]) {
         network_config.warmup_size = stoi(parser.get_cmd_option("-ws"));
     }
 
+    if (parser.cmd_option_exists("-za")) {
+        network_config.zipf_distribution_alpha = stoi(parser.get_cmd_option("-za"));
+    }
+
     print_configuration(&network_config);
 
     /**************************************************************
@@ -106,6 +110,10 @@ void print_configuration(network::network_config* network_config) {
     VLOG(0) << "[DAEDALUS][CONFIG] "
         << "Percentage of packets used during warm up: "
         << network_config->warmup_size;
+
+    VLOG(0) << "[DAEDALUS][CONFIG] "
+        << "Zipf's Alpha: "
+        << network_config->zipf_distribution_alpha;
 }
 
 void print_help() {
@@ -125,6 +133,7 @@ void print_help() {
     std::cout << "-np <arg>   Number of unique packets. Default: "                                        << network_config.number_of_packets  << std::endl;
     std::cout << "-rs <arg>   Round duration. How many packets represent a round. Default: "              << network_config.round_size         << std::endl;
     std::cout << "-ws <arg>   Number of packets used during warm up. Default: "                           << network_config.warmup_size        << std::endl;
+    std::cout << "-za <arg>   Zipf's Alpha. Alpha parameter in Zipf distribution. Default: "               << network_config.zipf_distribution_alpha << std::endl;
     std::cout << std::endl;
 
     std::cout << "LOGGING OPTIONS:" << std::endl;

@@ -49,6 +49,7 @@ OPTIONS:
 -np <arg>   Number of unique packets.
 -rs <arg>   Round duration. How many packets represent a round.
 -ws <arg>   Number of packets used during warm up.
+-za <arg>   Zipf's Alpha. Alpha parameter in Zipf distribution.
 
 LOGGING OPTIONS:
 --v=<arg>   Verbosity Level. Default: 0. Possible options: 0 (GENERAL), 1 (INFO), 2 (WARNING), 9 (DEBUG)

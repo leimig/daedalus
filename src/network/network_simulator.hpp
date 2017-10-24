@@ -23,6 +23,7 @@ namespace network {
         int number_of_packets = 500;
         int round_size = 8000;
         int warmup_size = 500;
+        double zipf_distribution_alpha = 0.5;
     } network_config;
 
     typedef struct received_lookup {
