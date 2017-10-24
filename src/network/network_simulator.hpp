@@ -16,6 +16,7 @@
 
 namespace network {
     typedef struct network_config {
+        std::string output_file = "output";
         std::string policy_name = network::node::cache::no_cache::id;
         int cache_size = 20;
         int network_three_size = 50;

@@ -4,6 +4,7 @@
 #include "./../lib/easylogging++.h"
 
 #include "./results/data_collector.hpp"
+#include "./results/data_exporter.hpp"
 #include "./input_parser.hpp"
 #include "./network/network_simulator.hpp"
 
@@ -26,6 +27,10 @@ int main(int argc, char const *argv[]) {
     **************             READ INPUT            **************
     **************************************************************/
     network::network_config network_config;
+
+    if (parser.cmd_option_exists("-of")) {
+        network_config.output_file = parser.get_cmd_option("-of");
+    }
 
     if (parser.cmd_option_exists("-p")) {
         network_config.policy_name = parser.get_cmd_option("-p");
@@ -69,6 +74,11 @@ int main(int argc, char const *argv[]) {
         << results::data_collector::instance()->cache_hits() << "/"
         << results::data_collector::instance()->cache_misses();
 
+    VLOG(0) << "[DAEDALUS] Writing results in file";
+    results::data_exporter::write(&network_config);
+    VLOG(0) << "[DAEDALUS] Results written in output file";
+
+    VLOG(0) << "[DAEDALUS] Thanks for using me!";
     return 0;
 }
 
@@ -108,6 +118,7 @@ void print_help() {
     std::cout << std::endl;
 
     std::cout << "OPTIONS:" << std::endl;
+    std::cout << "-of <arg>   Output file. Default: "                                                     << network_config.policy_name        << std::endl;
     std::cout << "-p  <arg>   Policy name. Default: "                                                     << network_config.policy_name        << std::endl;
     std::cout << "-cs <arg>   Cache size. How many packets can be stored by the Content Store. Default: " << network_config.cache_size         << std::endl;
     std::cout << "-ts <arg>   Number of nodes in the network three under the target node. Default: "      << network_config.network_three_size << std::endl;
