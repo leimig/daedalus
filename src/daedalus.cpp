@@ -118,7 +118,7 @@ void print_help() {
     std::cout << std::endl;
 
     std::cout << "OPTIONS:" << std::endl;
-    std::cout << "-of <arg>   Output file. Default: "                                                     << network_config.policy_name        << std::endl;
+    std::cout << "-of <arg>   Output file. Default: "                                                     << network_config.output_file        << std::endl;
     std::cout << "-p  <arg>   Policy name. Default: "                                                     << network_config.policy_name        << std::endl;
     std::cout << "-cs <arg>   Cache size. How many packets can be stored by the Content Store. Default: " << network_config.cache_size         << std::endl;
     std::cout << "-ts <arg>   Number of nodes in the network three under the target node. Default: "      << network_config.network_three_size << std::endl;
