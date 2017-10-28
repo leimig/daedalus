@@ -19,6 +19,8 @@ namespace results {
             return s_data_collector;
         }
 
+        static void reset();
+
         int cache_lookups() { return this-> m_cache_lookups; }
         int cache_hits() { return this-> m_cache_hits; }
         int cache_misses() { return this-> m_cache_misses; }
