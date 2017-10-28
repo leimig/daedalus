@@ -1,5 +1,5 @@
-#ifndef FIFO_HPP
-#define FIFO_HPP
+#ifndef LIFO_HPP
+#define LIFO_HPP
 
 #include <string>
 #include <list>
