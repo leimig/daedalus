@@ -2,6 +2,7 @@
 #include "./no_cache.hpp"
 #include "./climb.hpp"
 #include "./fifo.hpp"
+#include "./lifo.hpp"
 #include "./lru.hpp"
 
 network::node::cache::policy* network::node::cache::policy::make(std::string id, int cache_size) {
@@ -10,6 +11,9 @@ network::node::cache::policy* network::node::cache::policy::make(std::string id,
 
     if (id == network::node::cache::fifo::id)
         return new network::node::cache::fifo(cache_size);
+
+    if (id == network::node::cache::lifo::id)
+        return new network::node::cache::lifo(cache_size);
 
     if (id == network::node::cache::lru::id)
         return new network::node::cache::lru(cache_size);
