@@ -15,6 +15,7 @@ void results::data_exporter::write(network::network_config *config) {
         "&np=" + std::to_string(config->number_of_packets) +
         "&rs=" + std::to_string(config->round_size) +
         "&ws=" + std::to_string(config->warmup_size) +
+        "&za=" + std::to_string(config->zipf_distribution_alpha) +
         ".ddl";
 
     std::ofstream output_stream;

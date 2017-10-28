@@ -76,7 +76,7 @@ int main(int argc, char const *argv[]) {
         VLOG(0) << "[DAEDALUS] Setting up network simulator";
         network::network_simulator simulator(network_config);
 
-        VLOG(0) << "[DAEDALUS] Starting simulation";
+        VLOG(0) << "[DAEDALUS] Executing simulation";
         simulator.run();
 
         VLOG(0) << "[DAEDALUS] Simulation finished";
@@ -85,6 +85,9 @@ int main(int argc, char const *argv[]) {
         VLOG(0) << "[DAEDALUS][RESULTS] Cache hits/misses: "
             << results::data_collector::instance()->cache_hits() << "/"
             << results::data_collector::instance()->cache_misses();
+        VLOG(0) << "[DAEDALUS][RESULTS] Cache hits percentage: "
+            << ((double)(results::data_collector::instance()->cache_hits() * 100) / (double)(results::data_collector::instance()->cache_lookups()))
+            << "%";
 
         VLOG(0) << "[DAEDALUS] Writing results in file";
         results::data_exporter::write(&network_config);
@@ -121,7 +124,7 @@ void print_configuration(network::network_config* network_config) {
         << network_config->round_size;
 
     VLOG(0) << "[DAEDALUS][CONFIG] "
-        << "Percentage of packets used during warm up: "
+        << "Number of packets used during warm up: "
         << network_config->warmup_size;
 
     VLOG(0) << "[DAEDALUS][CONFIG] "
