@@ -97,8 +97,8 @@ std::shared_ptr<network::node::protocol::data_packet> network::network_simulator
 }
 
 void network::network_simulator::send_interest_packet() {
-    int sender_id = zipf(this->m_config.zipf_distribution_alpha, this->m_config.network_three_size) + 1;
-    std::string packet_id = std::to_string((rand() % this->m_config.number_of_packets) + 1);
+    int sender_id = (rand() % this->m_config.network_three_size) + 1;
+    std::string packet_id = std::to_string(zipf(this->m_config.zipf_distribution_alpha, this->m_config.number_of_packets) + 1);
 
     network::node::protocol::interest_packet packet(sender_id, packet_id);
     this->m_node->handle_lookup(packet);
