@@ -21,7 +21,7 @@ namespace network {
 
                 bool has(std::string packet_id);
                 network::node::protocol::data_packet_content* get(std::string packet_id);
-                void put(network::node::protocol::data_packet packet);
+                void put(network::node::protocol::data_packet packet, data_packet_meta meta);
             };
         }
     }

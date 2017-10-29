@@ -17,6 +17,6 @@ network::node::protocol::data_packet_content* network::node::cache::no_cache::ge
     return NULL;
 }
 
-void network::node::cache::no_cache::put(network::node::protocol::data_packet packet) {
+void network::node::cache::no_cache::put(network::node::protocol::data_packet packet, data_packet_meta meta) {
 
 }

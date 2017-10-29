@@ -1,6 +1,7 @@
 #ifndef POLICY_HPP
 #define POLICY_HPP
 
+#include <chrono>
 #include <string>
 
 namespace network {
@@ -11,6 +12,10 @@ namespace network {
         }
 
         namespace cache {
+            typedef struct data_packet_meta {
+                std::chrono::milliseconds delay;
+            } data_packet_meta;
+
             class policy {
                 int m_cache_size;
 
@@ -27,7 +32,7 @@ namespace network {
 
                 virtual bool has(std::string packet_id) = 0;
                 virtual network::node::protocol::data_packet_content* get(std::string packet_id) = 0;
-                virtual void put(network::node::protocol::data_packet packet) = 0;
+                virtual void put(network::node::protocol::data_packet packet, data_packet_meta meta) = 0;
             };
         }
     }

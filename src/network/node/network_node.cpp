@@ -72,8 +72,14 @@ void network::node::network_node::handle_lookup(network::node::protocol::interes
 void network::node::network_node::handle_answer(network::node::protocol::data_packet packet) {
     VLOG(9) << "[DAEDALUS][NETWORK_NODE] " << "Receiving Data Packet for " << packet.packet_id();
 
+    std::chrono::milliseconds delay;
+
     if (this->m_pending_interest_table.count(packet.packet_id()) == 1) {
         std::list<pit_entry> pending = this->m_pending_interest_table[packet.packet_id()];
+
+        delay = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        ) - pending.end()->timestamp;
 
         std::list<pit_entry>::iterator entry_i;
 
@@ -83,5 +89,8 @@ void network::node::network_node::handle_answer(network::node::protocol::data_pa
         }
     }
 
-    this->m_store->put(packet);
+    network::node::cache::data_packet_meta meta;
+    meta.delay = delay;
+
+    this->m_store->put(packet, meta);
 }

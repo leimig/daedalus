@@ -27,7 +27,7 @@ network::node::protocol::data_packet_content* network::node::cache::lifo::get(st
     return NULL;
 }
 
-void network::node::cache::lifo::put(network::node::protocol::data_packet packet) {
+void network::node::cache::lifo::put(network::node::protocol::data_packet packet, data_packet_meta meta) {
     if (!this->has(packet.packet_id())) {
         if (!this->m_data.empty() && this->m_data.size() >= this->cache_size()) {
             this->m_data.pop_back();

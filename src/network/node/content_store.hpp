@@ -12,6 +12,10 @@ namespace network {
             typedef struct data_packet_content data_packet_content;
         }
 
+        namespace cache {
+            typedef struct data_packet_meta data_packet_meta;
+        }
+
         class content_store {
         private:
             bool m_tracking_enabled;
@@ -26,7 +30,7 @@ namespace network {
 
             bool has(std::string id);
             network::node::protocol::data_packet_content* get(std::string id);
-            void put(protocol::data_packet packet);
+            void put(protocol::data_packet packet, cache::data_packet_meta meta);
         };
     }
 }

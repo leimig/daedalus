@@ -34,6 +34,6 @@ network::node::protocol::data_packet_content* network::node::content_store::get(
     return this->m_policy->get(id);
 }
 
-void network::node::content_store::put(network::node::protocol::data_packet packet) {
-    return this->m_policy->put(packet);
+void network::node::content_store::put(network::node::protocol::data_packet packet, cache::data_packet_meta meta) {
+    return this->m_policy->put(packet, meta);
 }

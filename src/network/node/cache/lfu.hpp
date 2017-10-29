@@ -1,5 +1,5 @@
-#ifndef CLIMB_HPP
-#define CLIMB_HPP
+#ifndef LFU_HPP
+#define LFU_HPP
 
 #include <string>
 #include <list>
@@ -9,15 +9,20 @@
 namespace network {
     namespace node {
         namespace cache {
-            class climb : public policy {
+            typedef struct lfu_entry {
+                std::string packet_id;
+                int frequency_count = 1;
+            } lfu_entry;
+
+            class lfu : public policy {
             private:
-                std::list<std::string> m_data;
+                std::list<lfu_entry> m_data;
 
             public:
                 static const std::string id;
 
-                climb(int cache_size);
-                ~climb();
+                lfu(int cache_size);
+                ~lfu();
 
                 bool has(std::string packet_id);
                 network::node::protocol::data_packet_content* get(std::string packet_id);
