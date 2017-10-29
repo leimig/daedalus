@@ -23,8 +23,11 @@ There are a limited number of available policies, however, it should be easy to 
 
 - NO_CACHE
 - FIFO
+- LIFO
 - LRU
+- LFU
 - CLIMB
+- LCC
 
 ### How to create a new Policy
 
