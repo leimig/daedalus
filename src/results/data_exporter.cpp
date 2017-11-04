@@ -22,11 +22,10 @@ void results::data_exporter::write(network::network_config *config) {
     output_stream.open(file_name, std::ios_base::app | std::ios_base::out);
 
     output_stream
-        << std::to_string(results::data_collector::instance()->cache_lookups()) << std::endl
-        << std::to_string(results::data_collector::instance()->cache_hits()) << std::endl
-        << std::to_string(results::data_collector::instance()->cache_misses()) << std::endl
-        << std::endl
-        ;
+        << std::to_string(results::data_collector::instance()->cache_lookups()) << ", "
+        << std::to_string(results::data_collector::instance()->cache_hits()) << ", "
+        << std::to_string(results::data_collector::instance()->cache_misses()) << ", "
+        << std::to_string((double) results::data_collector::instance()->cache_hits() / (double) results::data_collector::instance()->cache_misses()) << std::endl;
 
     output_stream.close();
 }
