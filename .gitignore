@@ -1,5 +1,5 @@
 .DS_Store
-*.ddl
+*.csv
 
 # Prerequisites
 *.d
