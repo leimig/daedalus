@@ -1,6 +1,7 @@
 //=========================================================================
 //= This is a modified version of genzipf.c                               =
-//= It is available at: http://www.csee.usf.edu/~kchriste/tools/genzipf.c =
+//= The original version is available at:                                 =
+//=    http://www.csee.usf.edu/~kchriste/tools/genzipf.c                  =
 //=========================================================================
 #include <cassert>
 #include <cmath>

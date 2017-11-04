@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]) {
     }
 
     if (parser.cmd_option_exists("-za")) {
-        network_config.zipf_distribution_alpha = stoi(parser.get_cmd_option("-za"));
+        network_config.zipf_distribution_alpha = stod(parser.get_cmd_option("-za"));
     }
 
     print_configuration(&network_config);
